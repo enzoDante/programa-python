@@ -55,4 +55,20 @@ plt.xlabel('sepala comprimento')
 plt.ylabel('sepala largura')
 plt.show()
 #=======================================================================
-#agora um gráfico de comprimento e largura da pétala
+#agora um gráfico de comprimento e largura da pétala (mesma coisa q as sépalas)
+petal_len = list()
+petal_width = list()
+for i in features:
+    petal_len.append(i[2])#comprimento da pétala
+    petal_width.append(i[3])#largura da pétala
+groups = ('Iris setosa', 'Iris versicolor', 'iris virginica') #tupla dos tipos de sépalas
+colors = ('blue', 'green', 'red')
+data = ((petal_len[:50], petal_width[:50]), (petal_len[50:100], petal_width[50:100]), (petal_len[100:150], petal_width[100:150]))
+
+for item, cor, group in zip(data, colors, groups):
+    x0, y0 = item #mesma coisa do gráfico anterior, ent nn vou explicar
+    plt.scatter(x0, y0, color=cor, alpha=1)
+plt.title("iris dados larg, comp - pétalas")
+plt.xlabel("pétalas comprimento")
+plt.ylabel("pétalas largura")
+plt.show()
