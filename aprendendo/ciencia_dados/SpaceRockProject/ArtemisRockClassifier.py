@@ -1,6 +1,3 @@
-from glob import glob
-
-
 print("Artemis Rover Rock Scanner Starting")
 basalt = 0
 breccia = highland = regolith = 0
