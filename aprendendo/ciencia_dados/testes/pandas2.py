@@ -23,7 +23,7 @@ print(s['a'])
 print(s[['a','c','d']])
 #print(s['f'])#n existe erro
 
-#dataframe bidimensional!!!=============================================
+#==========================[dataframe bidimensional!!!]============================
 data = [1,2,3,4,5]
 df = pd.DataFrame(data)
 print(df)
