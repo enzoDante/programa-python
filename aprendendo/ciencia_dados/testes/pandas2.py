@@ -21,7 +21,7 @@ print(s4)
 s = pd.Series([1,2,3,4,5], index=['a','b','c','d','e'])
 print(s['a'])
 print(s[['a','c','d']])
-#print(s['f'])#n existe erro
+#print(s['f'])#n existe = erro
 
 #==========================[dataframe bidimensional!!!]============================
 data = [1,2,3,4,5]
