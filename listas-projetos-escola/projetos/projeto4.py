@@ -99,18 +99,37 @@ def profxcurso():
             print('\n\n')
             #print(tabela)
             tt = list()
-            for i in tabela:
-                #print(i)
-                #print(i[0])
-                t = {f'Curso {i[1]}': i[0]}
-                tt.append(t)
+            c = 0
+            dd = dict()
+            a = list()
+            t = dict()
+            print(tabela)
+            for i1 in range(len(tabela)-1):
+                for i in tabela:
+                    #print(i)
+                    #print(i[0])
+                    #t = {f'Curso {i[1]}': i[0]}
+                    #tt.append(t)
+                    if i[1] == i1+1:
+                        c = i[1]
+                        a.append(i[0])
 
-            print(tt)
-            for i in tt:
-                print(i)
+                if(a):
+                    #t = {f'Curso {c}': a.copy()}
+                    t[f'Curso {c}'] = a.copy()
+                    a.clear()
 
 
-            df = pd.DataFrame(tt)
+            print(f'aaaa {t}')
+            t['Curso 2'].append('-') #funciona
+            print(t['Curso 2'])
+            # print(tt)
+            # for i in tt:
+            #     print(i)
+
+
+            #df = pd.DataFrame(tt)
+            df = pd.DataFrame(t)
             print(df)
 
 
