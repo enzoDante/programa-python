@@ -89,6 +89,33 @@ def digitCodigo():
             break
         except:
             print("Digite um valor numérico!")
+#==================professores por cursos==============
+def profxcurso():
+    try:
+        sql = conn.cursor()
+        sql.execute(f'select nomeprof, curso from professores inner join disciplinasxprofessores on (registro=codprofessor) where anoletivo=2021')
+        tabela = sql.fetchall()
+        if sql.rowcount > 0:
+            print('\n\n')
+            #print(tabela)
+            tt = list()
+            for i in tabela:
+                #print(i)
+                #print(i[0])
+                t = {f'Curso {i[1]}': i[0]}
+                tt.append(t)
+
+            print(tt)
+            for i in tt:
+                print(i)
+
+
+            df = pd.DataFrame(tt)
+            print(df)
+
+
+    except:
+        print("Ocorreu um erro ao buscar por dados do banco de dados!")
 
 #================================================main======================
 if abrirbanco() == 1:
@@ -107,7 +134,7 @@ if abrirbanco() == 1:
             print(dados)
             break
     #=======parte 2==========
-    
+    profxcurso()
 
 
 
@@ -123,11 +150,11 @@ if abrirbanco() == 1:
     #         'valores':[50000.00, 60000.0, 100000.0, 2000000.09]}
     # df2 = pd.DataFrame(dici)
 
-    arquivo = pd.ExcelWriter('D:/codigo-vsCode/programa-python/listas-projetos-escola/projetos/dadosdp.xlsx', engine='openpyxl')
+    # arquivo = pd.ExcelWriter('D:/codigo-vsCode/programa-python/listas-projetos-escola/projetos/dadosdp.xlsx', engine='openpyxl')
 
     #df.to_excel('D:/codigo-vsCode/programa-python/listas-projetos-escola/projetos/carross.xlsx', sheet_name='Planilha1', na_rep='#N/A', header=True, index=False) - nn da
 
 
-    dados.to_excel(arquivo, sheet_name='planilha1', index = True)
+    # dados.to_excel(arquivo, sheet_name='planilha1', index = True)
     # df2.to_excel(arquivo, sheet_name='planilha2', index = False)
-    arquivo.save()
+    # arquivo.save()
