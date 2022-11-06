@@ -38,6 +38,33 @@ def verificarprof(c=0):
     except:
         print("não foi possível buscar pelo professor!")
         return False
+#dados de determinado professor
+def profd(c):
+    try:
+        sql = conn.cursor()
+        sql.execute(f'select * from disciplinasxprofessores inner join disciplinas on (codigodisc=coddisciplina) where codprofessor={c} and anoletivo=2021')
+        #inner join professores on (registro=codprofessor) where registro={c}
+        tabela = sql.fetchall()
+        if sql.rowcount > 0:
+            dadoprofd = list()
+            #print(tabela)
+            for i in tabela:
+                #print(f'teste =  {i} ')
+                linha = {'codigo': i[0], 'codigo disciplina': i[1], 'curso': i[3], 'carga horaria': i[4], 'ano letivo': i[5], 'nome disciplina': i[7]}
+                dadoprofd.append(linha)
+
+            df4 = pd.DataFrame(dadoprofd)
+            #print(dadoprofd)
+            print(df4)
+            #df3 = pd.DataFrame(tabela)
+            #nome = df3['nome']
+            #print(nome)
+            #print(df3)
+            return df4
+
+    except:
+        print('ocorreu um erro ao buscar por dados do professor!')
+        return False
 
 #============main===================
 if abrirbanco() == 1:
@@ -51,6 +78,12 @@ if abrirbanco() == 1:
         except:
             print("Digite um valor numérico!")
     print("boa")
+    dados = profd(codigo)
+    
+
+
+
+
 
     dici = {'Carros': ['A', 'B', 'C', 'D'],
             'Ano':[2015, 2019, 2021, 2022],
@@ -62,8 +95,11 @@ if abrirbanco() == 1:
             'valores':[50000.00, 60000.0, 100000.0, 2000000.09]}
     df2 = pd.DataFrame(dici)
 
-    arquivo = pd.ExcelWriter('D:/codigo-vsCode/programa-python/listas-projetos-escola/projetos/carross.xlsx', engine='openpyxl')
-    #df.to_excel('D:/codigo-vsCode/programa-python/listas-projetos-escola/projetos/carross.xlsx', sheet_name='Planilha1', na_rep='#N/A', header=True, index=False)
-    df.to_excel(arquivo, sheet_name='planilha1', index = False)
-    df2.to_excel(arquivo, sheet_name='planilha2', index = False)
-    arquivo.save()
+    # arquivo = pd.ExcelWriter('D:/codigo-vsCode/programa-python/listas-projetos-escola/projetos/carross.xlsx', engine='openpyxl')
+
+    #df.to_excel('D:/codigo-vsCode/programa-python/listas-projetos-escola/projetos/carross.xlsx', sheet_name='Planilha1', na_rep='#N/A', header=True, index=False) - nn da
+
+
+    # df.to_excel(arquivo, sheet_name='planilha1', index = False)
+    # df2.to_excel(arquivo, sheet_name='planilha2', index = False)
+    # arquivo.save()
