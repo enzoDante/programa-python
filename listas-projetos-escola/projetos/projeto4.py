@@ -3,7 +3,7 @@
 import mysql.connector
 import pandas as pd
 import openpyxl
-#==============abrir o banco de dados==========
+#================================abrir o banco de dados========================
 def abrirbanco():
     try:
         global conn
@@ -22,15 +22,17 @@ def abrirbanco():
             return 0
     except:
         print(f'Ocorreu um erro na conexão do banco de dados!')
-#verificar se existe o registro
+#================================verificar se existe o registro============
 def verificarprof(c=0):
     try:
         sql = conn.cursor()
         sql.execute(f'select * from professores where registro={c};')
         tabela = sql.fetchall()
+        global nomeprof
         
         if sql.rowcount > 0:
             for i in tabela:
+                nomeprof = i[1]
                 print(f'Professor: {i[1]}')
             return True
         else:
@@ -38,7 +40,7 @@ def verificarprof(c=0):
     except:
         print("não foi possível buscar pelo professor!")
         return False
-#dados de determinado professor
+#==================================dados de determinado professor===================
 def profd(c):
     try:
         sql = conn.cursor()
@@ -46,30 +48,40 @@ def profd(c):
         #inner join professores on (registro=codprofessor) where registro={c}
         tabela = sql.fetchall()
         if sql.rowcount > 0:
+            nome_disciplinac = ''
             dadoprofd = list()
-            #print(tabela)
             for i in tabela:
-                #print(f'teste =  {i} ')
-                linha = {'codigo': i[0], 'codigo disciplina': i[1], 'curso': i[3], 'carga horaria': i[4], 'ano letivo': i[5], 'nome disciplina': i[7]}
+                nome_disciplinac = f'{i[7]} código: {i[1]}'
+                #, 'codigo disciplina': i[1], 'nome disciplina': i[7]
+                linha = {'codigo': int(i[0]), 'curso': int(i[3]), 'carga horaria': i[4]}
                 dadoprofd.append(linha)
 
-            df4 = pd.DataFrame(dadoprofd)
-            #print(dadoprofd)
-            print(df4)
-            #df3 = pd.DataFrame(tabela)
-            #nome = df3['nome']
-            #print(nome)
-            #print(df3)
-            return df4
+            df = pd.DataFrame(dadoprofd)
+            total_horas = 0
+            for i in df['carga horaria']:
+                total_horas += i
+                
+            df.loc['total de horas'] = '-'
+            df.loc['total de horas', 'carga horaria'] = total_horas
+
+            df.loc['Professor'] = '-'
+            df.loc['Professor', 'codigo'] = f'{nomeprof} - ano letivo: 2021'
+
+            df.loc['Disciplina'] = '-'
+            df.loc['Disciplina', 'codigo'] = f'{nome_disciplinac}'
+            #print(df)
+            return df
+        return False
 
     except:
         print('ocorreu um erro ao buscar por dados do professor!')
         return False
 
-#============main===================
-if abrirbanco() == 1:
+#==================================digitar codigo prof======================
+def digitCodigo():
     while True:
         try:
+            global codigo
             codigo = int(input("Digite o código de um professor: "))
             if verificarprof(codigo) != True:
                 print('Professor inexistente!')
@@ -77,29 +89,45 @@ if abrirbanco() == 1:
             break
         except:
             print("Digite um valor numérico!")
-    print("boa")
-    dados = profd(codigo)
+
+#================================================main======================
+if abrirbanco() == 1:
+    #======parte 1===========
+    digitCodigo()
+
+    while True:     
+        dados = profd(codigo)
+        try:
+            if(dados == False):
+                print('Esse professor não tem dados no ano letivo de 2021')
+                digitCodigo()
+                
+        except:
+            print('\n\n')
+            print(dados)
+            break
+    #=======parte 2==========
     
 
 
 
 
 
-    dici = {'Carros': ['A', 'B', 'C', 'D'],
-            'Ano':[2015, 2019, 2021, 2022],
-            'valores':[50000.00, 60000.0, 100000.0, 2000000.09]}
-    df = pd.DataFrame(dici)
+    # dici = {'Carros': ['A', 'B', 'C', 'D'],
+    #         'Ano':[2015, 2019, 2021, 2022],
+    #         'valores':[50000.00, 60000.0, 100000.0, 2000000.09]}
+    # df = pd.DataFrame(dici)
 
-    dici = {'Carros': ['E', 'F', 'G', 'H'],
-            'Ano':[2015, 2019, 2021, 2022],
-            'valores':[50000.00, 60000.0, 100000.0, 2000000.09]}
-    df2 = pd.DataFrame(dici)
+    # dici = {'Carros': ['E', 'F', 'G', 'H'],
+    #         'Ano':[2015, 2019, 2021, 2022],
+    #         'valores':[50000.00, 60000.0, 100000.0, 2000000.09]}
+    # df2 = pd.DataFrame(dici)
 
-    # arquivo = pd.ExcelWriter('D:/codigo-vsCode/programa-python/listas-projetos-escola/projetos/carross.xlsx', engine='openpyxl')
+    arquivo = pd.ExcelWriter('D:/codigo-vsCode/programa-python/listas-projetos-escola/projetos/dadosdp.xlsx', engine='openpyxl')
 
     #df.to_excel('D:/codigo-vsCode/programa-python/listas-projetos-escola/projetos/carross.xlsx', sheet_name='Planilha1', na_rep='#N/A', header=True, index=False) - nn da
 
 
-    # df.to_excel(arquivo, sheet_name='planilha1', index = False)
+    dados.to_excel(arquivo, sheet_name='planilha1', index = True)
     # df2.to_excel(arquivo, sheet_name='planilha2', index = False)
-    # arquivo.save()
+    arquivo.save()
