@@ -96,45 +96,86 @@ def profxcurso():
         sql.execute(f'select nomeprof, curso from professores inner join disciplinasxprofessores on (registro=codprofessor) where anoletivo=2021')
         tabela = sql.fetchall()
         if sql.rowcount > 0:
-            print('\n\n')
-            #print(tabela)
-            tt = list()
-            c = 0
-            dd = dict()
-            a = list()
-            t = dict()
-            print(tabela)
+            curso = 0
+            elementos = list()
+            valoresCxP = dict()
+            
             for i1 in range(len(tabela)-1):
                 for i in tabela:
-                    #print(i)
-                    #print(i[0])
-                    #t = {f'Curso {i[1]}': i[0]}
-                    #tt.append(t)
                     if i[1] == i1+1:
-                        c = i[1]
-                        a.append(i[0])
+                        curso = i[1]
+                        elementos.append(i[0])
 
-                if(a):
-                    #t = {f'Curso {c}': a.copy()}
-                    t[f'Curso {c}'] = a.copy()
-                    a.clear()
-
-
-            print(f'aaaa {t}')
-            t['Curso 2'].append('-') #funciona
-            print(t['Curso 2'])
-            # print(tt)
-            # for i in tt:
-            #     print(i)
+                if(elementos):
+                    valoresCxP[f'Curso {curso}'] = elementos.copy()
+                    elementos.clear()
 
 
-            #df = pd.DataFrame(tt)
-            df = pd.DataFrame(t)
+            maior = 0
+            qtd_profs = list()
+            for k, v in valoresCxP.items():
+
+                qtd_profs.append(len(v))
+                if len(v) > maior:
+                    maior = len(v)
+            for k, v in valoresCxP.items():
+                while len(v) < maior:
+                    valoresCxP[k].append('-')
+
+            df = pd.DataFrame(valoresCxP)
+            df.loc['Total de professores'] = qtd_profs
             print(df)
-
-
+            return df
     except:
         print("Ocorreu um erro ao buscar por dados do banco de dados!")
+#=========disciplinas por curso============
+def discxcurso():
+    try:
+        sql = conn.cursor()
+        sql.execute('select nomedisc,curso,cargahoraria from disciplinas inner join disciplinasxprofessores on (coddisciplina=codigodisc) where anoletivo=2021')
+        print('\n')
+        tabela = sql.fetchall()
+        if sql.rowcount > 0:
+            curso = 0
+            elementos = list()
+            total_horas = list()
+            valoresCxD = dict()
+            
+            for i1 in range(len(tabela)-1):
+                for i in tabela:
+                    if i[1] == i1+1:
+                        curso = i[1]
+                        elementos.append(i[0])
+
+                if(elementos):
+                    valoresCxD[f'Curso {curso}'] = elementos.copy()
+                    elementos.clear()
+
+
+            maior = 0
+            for k, v in valoresCxD.items():
+                if len(v) > maior:
+                    maior = len(v)
+            for k, v in valoresCxD.items():
+                while len(v) < maior:
+                    valoresCxD[k].append('-')
+
+            df = pd.DataFrame(valoresCxD)
+
+            #=====carga total=====
+            sql.execute('select sum(cargahoraria) as lik from disciplinasxprofessores where anoletivo=2021 group by curso')
+            tabela = sql.fetchall()
+            if sql.rowcount > 0:
+                for i in tabela:
+                    total_horas.append(i[0])
+            #=====================
+
+            df.loc['Total de horas'] = total_horas
+            print(df)
+            return df
+
+    except:
+        print('Ocorreu um erro ao buscar por dados no banco')
 
 #================================================main======================
 if abrirbanco() == 1:
@@ -153,27 +194,15 @@ if abrirbanco() == 1:
             print(dados)
             break
     #=======parte 2==========
-    profxcurso()
+    dados2 = profxcurso()
+    #=========parte 3=======
+    dados3 = discxcurso()
 
+    arquivo = pd.ExcelWriter('D:/codigo-vsCode/programa-python/listas-projetos-escola/projetos/dadosdp.xlsx', engine='openpyxl')
 
-
-
-
-    # dici = {'Carros': ['A', 'B', 'C', 'D'],
-    #         'Ano':[2015, 2019, 2021, 2022],
-    #         'valores':[50000.00, 60000.0, 100000.0, 2000000.09]}
-    # df = pd.DataFrame(dici)
-
-    # dici = {'Carros': ['E', 'F', 'G', 'H'],
-    #         'Ano':[2015, 2019, 2021, 2022],
-    #         'valores':[50000.00, 60000.0, 100000.0, 2000000.09]}
-    # df2 = pd.DataFrame(dici)
-
-    # arquivo = pd.ExcelWriter('D:/codigo-vsCode/programa-python/listas-projetos-escola/projetos/dadosdp.xlsx', engine='openpyxl')
+    dados.to_excel(arquivo, sheet_name='planilha1', index = True)
+    dados2.to_excel(arquivo, sheet_name='planilha2', index = True)
+    dados3.to_excel(arquivo, sheet_name='planilha3', index = True)
+    arquivo.save()
 
     #df.to_excel('D:/codigo-vsCode/programa-python/listas-projetos-escola/projetos/carross.xlsx', sheet_name='Planilha1', na_rep='#N/A', header=True, index=False) - nn da
-
-
-    # dados.to_excel(arquivo, sheet_name='planilha1', index = True)
-    # df2.to_excel(arquivo, sheet_name='planilha2', index = False)
-    # arquivo.save()
