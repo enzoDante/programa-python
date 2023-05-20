@@ -1,44 +1,35 @@
-n = int(input())
+import math
 
 resp = list()
-for i in range(0, n):
+vezes = int(input())
+
+for i in range(0, vezes):
     x = list()
-    x2 = list()
-    y2 = list()
-    z2 = list()
-    d1 = list()
-    d2 = list()
-    x2.append(int(input()))
-    x2.append(int(input()))
-    x2.append(1)
-    y2.append(int(input()))
-    y2.append(int(input()))
-    y2.append(1)
-    z2.append(int(input()))
-    z2.append(int(input()))
-    z2.append(1)
-    x.append(x2)
-    x.append(y2)
-    x.append(z2)
-
-    d1.append(x[0][0] * x[1][1] * x[2][2])
-    d1.append(x[0][1] * x[1][2] * x[2][0])
-    d1.append(x[0][2] * x[1][0] * x[2][1])
-
-    d2.append(x[2][0] * x[1][1] * x[0][2])
-    d2.append(x[2][1] * x[1][2] * x[0][0])
-    d2.append(x[2][2] * x[1][0] * x[0][1])
-    j = (d1[0] + d1[1] + d1[2]) - (d2[0] + d2[1] + d2[2])
-    resp.append(j)
-    del x2
-    del y2
-    del z2
-    del x
+    y = list()
     
-for i in range(0, n):
-    if resp[i] == 0:
-        print('S')
+    for l in range(0, 3):
+        x.append(int(input()))
+        y.append(int(input()))
+    
+    #reta1 = math.sqrt(x[1] - x[0]) + math.sqrt(y[1] - y[0])
+    reta1 = ((x[1] - x[0])**2) + ((y[1] - y[0]) **2) **(1/2)
+    reta2 = ((x[1] - x[2])**2) + ((y[1] - y[2]) **2) **(1/2)
+    reta3 = ((x[2] - x[0])**2) + ((y[2] - y[0]) **2) **(1/2)
+    print(reta1)
+    print(reta2)
+    print(reta3)
+
+    t1 = abs(reta2 - reta3) < reta1 and reta1 < reta2 + reta3
+    t2 = abs(reta1 - reta3) < reta2 and reta2 < reta1 + reta3
+    t3 = abs(reta1 - reta2) < reta3 and reta3 < reta1 + reta2
+
+    if t1 and t2 and t3:
+        print('forma')
     else:
-        print('N',resp[i])
+        print('n forma')
+    if reta1 + reta2 < reta3 and reta1 + reta3 < reta2 and reta2 + reta3 < reta3:
+        print('forma uma reta')
+    else:
+        print('n forma uma reta')
 
-
+#era p funcionar!
