@@ -1,6 +1,5 @@
 import subprocess
 from pymongo import MongoClient
-import os
 
 client = MongoClient()
 backup = "C:/MongoBackupsSave"
