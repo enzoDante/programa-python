@@ -12,8 +12,10 @@ import time
 # print (str(resp))
 
 pyautogui.click(1105, 1067)
-for i in range(5):
-    pyautogui.moveTo(920, 523, 0)
-    pyautogui.click()
+pyautogui.moveTo(920, 523, 0)
+for i in range(10):
+    #pyautogui.moveTo(920, 523, 0)
+    if(pyautogui.position != 920, 523):
+        pyautogui.click()
     time.sleep(0.1)
 pyautogui.hotkey('alt', 'tab')
