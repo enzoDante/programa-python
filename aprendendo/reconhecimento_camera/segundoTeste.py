@@ -3,7 +3,7 @@ import cv2
 
 def contar_pessoas():
     # Carregar o classificador para detecção de corpos inteiros
-    full_body_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_fullbody.xml')
+    full_body_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_upperbody.xml')
 
     # Inicializar a captura de vídeo
     cap = cv2.VideoCapture(0)  # 0 para a câmera padrão
@@ -17,8 +17,8 @@ def contar_pessoas():
         # Converter o frame para escala de cinza
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-        # Detectar corpos inteiros na imagem
-        bodies = full_body_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+        # Detectar corpos inteiros na imagem -- alterar os valores aqui!!!!
+        bodies = full_body_cascade.detectMultiScale(gray, scaleFactor=1.3, minNeighbors=3, minSize=(30, 30))
 
         # Mostrar a quantidade de pessoas detectadas
         print("Pessoas na sala:", len(bodies))
